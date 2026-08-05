@@ -22,7 +22,7 @@ namespace {
 constexpr int     BLOCK_ENTRIES = 128;            // entries per disk block
 constexpr int     MIN_ENTRIES   = BLOCK_ENTRIES / 2;
 constexpr int     IDX_LEN       = 65;             // 64-byte index + NUL pad
-constexpr int     CACHE_CAP     = 48;             // cached blocks (~0.5 MB)
+constexpr int     CACHE_CAP     = 32;             // cached blocks (~0.3 MB)
 constexpr int32_t DIR_MAGIC     = 0x46313535;
 
 struct Key {
@@ -287,7 +287,7 @@ void rebalance(int di) {
 
 // ---------------------------------------------------------------- output --
 struct OutBuf {
-    static constexpr size_t CAP = 1 << 20;
+    static constexpr size_t CAP = 1 << 16;  // 64 KB: small so RSS stays low
     char   buf[CAP];
     size_t len = 0;
 
@@ -349,7 +349,7 @@ void findEntries(const Key& lo) {   // lo = (index, 0): smallest key for index
 
 // ----------------------------------------------------------------- input --
 struct InBuf {
-    static constexpr size_t CAP = 1 << 18;
+    static constexpr size_t CAP = 1 << 16;  // 64 KB: small so RSS stays low
     char   buf[CAP];
     size_t pos = 0, len = 0;
 
